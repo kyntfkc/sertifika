@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import SertifikaFormu from './components/SertifikaFormu';
 import SertifikaAyarlari from './components/SertifikaAyarlari';
-import { Settings, Printer } from 'lucide-react';
+import UrunListesi from './components/UrunListesi';
+import UrunFormu from './components/UrunFormu';
+import { Settings, Printer, Package } from 'lucide-react';
+import { Urun } from './services/api';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'form' | 'ayarlar'>('form');
+  const [activeTab, setActiveTab] = useState<'form' | 'ayarlar' | 'urunler'>('form');
+  const [urunFormMode, setUrunFormMode] = useState<'list' | 'add' | 'edit'>('list');
+  const [selectedUrun, setSelectedUrun] = useState<Urun | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -31,6 +36,20 @@ function App() {
               <span>Sertifika Yazdır</span>
             </button>
             <button
+              onClick={() => {
+                setActiveTab('urunler');
+                setUrunFormMode('list');
+              }}
+              className={`px-6 py-3 text-sm font-medium transition-all duration-200 border-b-2 flex items-center gap-2 ${
+                activeTab === 'urunler'
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Package className="w-4 h-4" />
+              <span>Ürünler</span>
+            </button>
+            <button
               onClick={() => setActiveTab('ayarlar')}
               className={`px-6 py-3 text-sm font-medium transition-all duration-200 border-b-2 flex items-center gap-2 ${
                 activeTab === 'ayarlar'
@@ -47,6 +66,35 @@ function App() {
         {/* Content */}
         {activeTab === 'form' && <SertifikaFormu />}
         {activeTab === 'ayarlar' && <SertifikaAyarlari />}
+        {activeTab === 'urunler' && (
+          <>
+            {urunFormMode === 'list' && (
+              <UrunListesi
+                onEdit={(urun) => {
+                  setSelectedUrun(urun);
+                  setUrunFormMode('edit');
+                }}
+                onAdd={() => {
+                  setSelectedUrun(null);
+                  setUrunFormMode('add');
+                }}
+              />
+            )}
+            {(urunFormMode === 'add' || urunFormMode === 'edit') && (
+              <UrunFormu
+                urun={selectedUrun}
+                onSave={() => {
+                  setUrunFormMode('list');
+                  setSelectedUrun(null);
+                }}
+                onCancel={() => {
+                  setUrunFormMode('list');
+                  setSelectedUrun(null);
+                }}
+              />
+            )}
+          </>
+        )}
       </div>
     </div>
   );

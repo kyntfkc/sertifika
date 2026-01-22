@@ -9,6 +9,33 @@ export interface SertifikaData {
   urunResmi?: string;
 }
 
+export interface Urun {
+  id: string;
+  urun_adi: string;
+  urun_kodu?: string;
+  altin_ayari: string;
+  musteri_adi: string;
+  siparis_tarihi: string;
+  platform: string;
+  siparis_no: string;
+  urun_resmi_url?: string;
+  urun_resmi_dosya?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UrunFormData {
+  urun_adi: string;
+  urun_kodu?: string;
+  altin_ayari: string;
+  musteri_adi: string;
+  siparis_tarihi: string;
+  platform: string;
+  siparis_no: string;
+  urun_resmi_url?: string;
+  urun_resmi_file?: File | null;
+}
+
 export interface SertifikaAyarlari {
   fotoğrafKonumu: 'sol-ust' | 'sol-alt' | 'sag-ust' | 'sag-alt';
   fotoğrafGenislik: string;
