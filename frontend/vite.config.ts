@@ -7,6 +7,12 @@ export default defineConfig({
     port: 5174,
     strictPort: false,
   },
+  preview: {
+    host: '0.0.0.0',
+    port: 4173,
+    strictPort: false,
+    allowedHosts: 'all',
+  },
   build: {
     target: 'esnext',
     minify: 'esbuild',
