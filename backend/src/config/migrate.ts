@@ -1,6 +1,6 @@
 import { pool } from './db.js';
 
-async function migrate() {
+export async function runMigration() {
   try {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS urunler (
@@ -28,11 +28,16 @@ async function migrate() {
     `);
 
     console.log('Migration completed successfully');
-    process.exit(0);
+    return true;
   } catch (error) {
     console.error('Migration error:', error);
-    process.exit(1);
+    return false;
   }
 }
 
-migrate();
+// CLI'dan çalıştırıldığında
+if (process.argv[1]?.includes('migrate')) {
+  runMigration().then((success) => {
+    process.exit(success ? 0 : 1);
+  });
+}

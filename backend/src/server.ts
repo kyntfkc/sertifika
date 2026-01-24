@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import urunRoutes from './routes/urunRoutes.js';
 import { testConnection } from './config/db.js';
+import { runMigration } from './config/migrate.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -41,6 +42,10 @@ async function startServer() {
     console.error('Database connection failed. Please check your DATABASE_URL.');
     process.exit(1);
   }
+
+  // Run migrations on startup
+  console.log('Running database migrations...');
+  await runMigration();
 
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
