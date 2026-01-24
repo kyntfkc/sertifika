@@ -45,8 +45,13 @@ export const createUrun = async (req: Request, res: Response) => {
       urun_resmi_url: req.body.urun_resmi_url,
     };
 
+    // Dosya yüklendiyse base64'e çevir ve veritabanına kaydet
     if (req.file) {
-      data.urun_resmi_dosya = req.file.filename;
+      const fileBuffer = fs.readFileSync(req.file.path);
+      const base64 = `data:${req.file.mimetype};base64,${fileBuffer.toString('base64')}`;
+      data.urun_resmi_base64 = base64;
+      // Geçici dosyayı sil
+      fs.unlinkSync(req.file.path);
     }
 
     const urun = await UrunModel.create(data);
@@ -71,16 +76,13 @@ export const updateUrun = async (req: Request, res: Response) => {
     if (req.body.siparis_no) data.siparis_no = req.body.siparis_no;
     if (req.body.urun_resmi_url !== undefined) data.urun_resmi_url = req.body.urun_resmi_url;
 
+    // Dosya yüklendiyse base64'e çevir
     if (req.file) {
-      // Eski dosyayı sil
-      const urun = await UrunModel.findById(id);
-      if (urun?.urun_resmi_dosya) {
-        const oldFilePath = path.join(__dirname, '../../uploads', urun.urun_resmi_dosya);
-        if (fs.existsSync(oldFilePath)) {
-          fs.unlinkSync(oldFilePath);
-        }
-      }
-      data.urun_resmi_dosya = req.file.filename;
+      const fileBuffer = fs.readFileSync(req.file.path);
+      const base64 = `data:${req.file.mimetype};base64,${fileBuffer.toString('base64')}`;
+      data.urun_resmi_base64 = base64;
+      // Geçici dosyayı sil
+      fs.unlinkSync(req.file.path);
     }
 
     const urun = await UrunModel.update(id, data);

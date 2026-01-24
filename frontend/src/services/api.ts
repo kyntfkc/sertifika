@@ -11,6 +11,7 @@ export interface Urun {
   siparis_no?: string;
   urun_resmi_url?: string;
   urun_resmi_dosya?: string;
+  urun_resmi_base64?: string;
   created_at: string;
   updated_at: string;
 }
@@ -102,9 +103,15 @@ export async function deleteUrun(id: string): Promise<void> {
 }
 
 export function getUrunResimUrl(urun: Urun): string | null {
+  // Önce base64 kontrol et (veritabanında saklanan)
+  if (urun.urun_resmi_base64) {
+    return urun.urun_resmi_base64;
+  }
+  // Sonra URL kontrol et
   if (urun.urun_resmi_url) {
     return urun.urun_resmi_url;
   }
+  // En son dosya yolu (artık kullanılmıyor ama eski kayıtlar için)
   if (urun.urun_resmi_dosya) {
     return `${API_BASE_URL}/uploads/${urun.urun_resmi_dosya}`;
   }

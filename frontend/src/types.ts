@@ -20,6 +20,7 @@ export interface Urun {
   siparis_no?: string;
   urun_resmi_url?: string;
   urun_resmi_dosya?: string;
+  urun_resmi_base64?: string;
   created_at: string;
   updated_at: string;
 }

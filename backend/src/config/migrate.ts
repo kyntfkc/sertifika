@@ -14,6 +14,7 @@ export async function runMigration() {
         siparis_no VARCHAR(100),
         urun_resmi_url VARCHAR(500),
         urun_resmi_dosya VARCHAR(255),
+        urun_resmi_base64 TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -28,6 +29,13 @@ export async function runMigration() {
       ALTER COLUMN siparis_no DROP NOT NULL
     `).catch(() => {
       // Zaten nullable ise hata yoksay
+    });
+
+    // Base64 görsel alanı ekle (mevcut tablolar için)
+    await pool.query(`
+      ALTER TABLE urunler ADD COLUMN IF NOT EXISTS urun_resmi_base64 TEXT
+    `).catch(() => {
+      // Zaten varsa hata yoksay
     });
 
     await pool.query(`

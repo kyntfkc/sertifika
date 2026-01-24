@@ -11,6 +11,7 @@ export interface Urun {
   siparis_no?: string;
   urun_resmi_url?: string;
   urun_resmi_dosya?: string;
+  urun_resmi_base64?: string;
   created_at: string;
   updated_at: string;
 }
@@ -25,6 +26,7 @@ export interface UrunCreate {
   siparis_no?: string;
   urun_resmi_url?: string;
   urun_resmi_dosya?: string;
+  urun_resmi_base64?: string;
 }
 
 export class UrunModel {
@@ -40,8 +42,8 @@ export class UrunModel {
 
   static async create(data: UrunCreate): Promise<Urun> {
     const result = await pool.query(
-      `INSERT INTO urunler (urun_adi, urun_kodu, altin_ayari, musteri_adi, siparis_tarihi, platform, siparis_no, urun_resmi_url, urun_resmi_dosya)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      `INSERT INTO urunler (urun_adi, urun_kodu, altin_ayari, musteri_adi, siparis_tarihi, platform, siparis_no, urun_resmi_url, urun_resmi_dosya, urun_resmi_base64)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        RETURNING *`,
       [
         data.urun_adi,
@@ -53,6 +55,7 @@ export class UrunModel {
         data.siparis_no || null,
         data.urun_resmi_url || null,
         data.urun_resmi_dosya || null,
+        data.urun_resmi_base64 || null,
       ]
     );
     return result.rows[0];
