@@ -81,7 +81,7 @@ function UrunFormu({ urun, onSave, onCancel }: UrunFormuProps) {
     try {
       const data = {
         urun_adi: formData.urun_adi,
-        urun_kodu: formData.urun_kodu || undefined,
+        urun_kodu: formData.urun_kodu,
         altin_ayari: formData.altin_ayari,
         urun_resmi_url: formData.urun_resmi_url || undefined,
       };
