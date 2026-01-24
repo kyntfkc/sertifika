@@ -10,6 +10,13 @@ export function yazdirSertifika(data: SertifikaData): void {
 
   const ayarlar = getSertifikaAyarlari();
 
+  // Tarihi Türkçe formata çevir (YYYY-MM-DD -> GG.AA.YYYY)
+  let formattedTarih = data.siparisTarihi;
+  if (data.siparisTarihi && data.siparisTarihi.includes('-')) {
+    const [year, month, day] = data.siparisTarihi.split('-');
+    formattedTarih = `${day}.${month}.${year}`;
+  }
+
   // Ürün adını temizle
   let temizUrunAdi = data.urunAdi
     .replace(/,\s*one\s*size/gi, '')
@@ -162,7 +169,7 @@ export function yazdirSertifika(data: SertifikaData): void {
           <div class="right-section">
             <div class="customer-info">
               <div class="info-line" style="position: ${ayarlar.müşteriAdıX || ayarlar.müşteriAdıY ? 'absolute' : 'relative'}; ${ayarlar.müşteriAdıX ? `left: ${ayarlar.müşteriAdıX}cm;` : ''} ${ayarlar.müşteriAdıY ? `top: ${ayarlar.müşteriAdıY}cm;` : ''}">${data.musteriAdi}</div>
-              <div class="info-line" style="position: ${ayarlar.siparişTarihiX || ayarlar.siparişTarihiY ? 'absolute' : 'relative'}; ${ayarlar.siparişTarihiX ? `left: ${ayarlar.siparişTarihiX}cm;` : ''} ${ayarlar.siparişTarihiY ? `top: ${ayarlar.siparişTarihiY}cm;` : ''}">${data.siparisTarihi}</div>
+              <div class="info-line" style="position: ${ayarlar.siparişTarihiX || ayarlar.siparişTarihiY ? 'absolute' : 'relative'}; ${ayarlar.siparişTarihiX ? `left: ${ayarlar.siparişTarihiX}cm;` : ''} ${ayarlar.siparişTarihiY ? `top: ${ayarlar.siparişTarihiY}cm;` : ''}">${formattedTarih}</div>
               <div class="info-line" style="position: ${ayarlar.platformX || ayarlar.platformY ? 'absolute' : 'relative'}; ${ayarlar.platformX ? `left: ${ayarlar.platformX}cm;` : ''} ${ayarlar.platformY ? `top: ${ayarlar.platformY}cm;` : ''}">${data.platform}</div>
               <div class="info-line" style="position: ${ayarlar.siparişNoX || ayarlar.siparişNoY ? 'absolute' : 'relative'}; ${ayarlar.siparişNoX ? `left: ${ayarlar.siparişNoX}cm;` : ''} ${ayarlar.siparişNoY ? `top: ${ayarlar.siparişNoY}cm;` : ''}">${data.siparisNo}</div>
             </div>

@@ -10,7 +10,7 @@ function SertifikaFormu() {
     urunKodu: '',
     altinAyari: '14 Ayar Altın',
     musteriAdi: '',
-    siparisTarihi: new Date().toLocaleDateString('tr-TR'),
+    siparisTarihi: new Date().toISOString().split('T')[0], // YYYY-MM-DD format for date input
     platform: 'Trendyol',
     siparisNo: '',
     urunResmi: '',
@@ -246,12 +246,11 @@ function SertifikaFormu() {
                 Sipariş Tarihi *
               </label>
               <input
-                type="text"
+                type="date"
                 required
                 value={formData.siparisTarihi}
                 onChange={(e) => handleChange('siparisTarihi', e.target.value)}
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="GG.AA.YYYY"
               />
             </div>
 
