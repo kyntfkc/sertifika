@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, X, Upload, Image as ImageIcon } from 'lucide-react';
+import { Save, X, Upload } from 'lucide-react';
 import { createUrun, updateUrun, getUrunResimUrl, type Urun } from '../services/api';
 import { UrunFormData } from '../types';
 
