@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Printer } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Printer, Search } from 'lucide-react';
 import { SertifikaData } from '../types';
 import { yazdirSertifika } from '../utils/sertifikaYazdir';
+import { getAllUrunler, getUrunResimUrl, type Urun } from '../services/api';
 
 function SertifikaFormu() {
   const [formData, setFormData] = useState<SertifikaData>({
@@ -14,6 +15,74 @@ function SertifikaFormu() {
     siparisNo: '',
     urunResmi: '',
   });
+
+  // Arama için state'ler
+  const [allUrunler, setAllUrunler] = useState<Urun[]>([]);
+  const [filteredUrunler, setFilteredUrunler] = useState<Urun[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeField, setActiveField] = useState<'urunAdi' | 'urunKodu' | null>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  // Ürünleri yükle
+  useEffect(() => {
+    const loadUrunler = async () => {
+      try {
+        const data = await getAllUrunler();
+        setAllUrunler(data);
+      } catch (err) {
+        console.error('Ürünler yüklenemedi:', err);
+      }
+    };
+    loadUrunler();
+  }, []);
+
+  // Dışarı tıklandığında dropdown'ı kapat
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Arama ve filtreleme
+  const handleSearchChange = (field: 'urunAdi' | 'urunKodu', value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setActiveField(field);
+
+    if (value.trim().length > 0) {
+      const filtered = allUrunler.filter((u) => {
+        if (field === 'urunAdi') {
+          return u.urun_adi.toLowerCase().includes(value.toLowerCase());
+        } else {
+          return u.urun_kodu.toLowerCase().includes(value.toLowerCase());
+        }
+      });
+      setFilteredUrunler(filtered);
+      setShowSuggestions(filtered.length > 0);
+    } else {
+      setFilteredUrunler([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  // Ürün seçildiğinde formu doldur
+  const handleSelectUrun = (selectedUrun: Urun) => {
+    const resimUrl = getUrunResimUrl(selectedUrun);
+    setFormData({
+      urunAdi: selectedUrun.urun_adi,
+      urunKodu: selectedUrun.urun_kodu || '',
+      altinAyari: selectedUrun.altin_ayari,
+      musteriAdi: formData.musteriAdi, // Müşteri bilgilerini koru
+      siparisTarihi: formData.siparisTarihi,
+      platform: formData.platform,
+      siparisNo: formData.siparisNo,
+      urunResmi: resimUrl || '',
+    });
+    setShowSuggestions(false);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,31 +101,95 @@ function SertifikaFormu() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">Ürün Bilgileri</h3>
             
-            <div>
+            {/* Ürün Adı - Arama özellikli */}
+            <div className="relative" ref={activeField === 'urunAdi' ? suggestionsRef : null}>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                Ürün Adı *
+                Ürün Adı * <span className="text-xs text-slate-500 font-normal">(Kayıtlı ürünlerden arayın)</span>
               </label>
-              <input
-                type="text"
-                required
-                value={formData.urunAdi}
-                onChange={(e) => handleChange('urunAdi', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Örn: Küpe, Yüzük"
-              />
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  required
+                  value={formData.urunAdi}
+                  onChange={(e) => handleSearchChange('urunAdi', e.target.value)}
+                  onFocus={() => {
+                    if (formData.urunAdi.trim().length > 0) {
+                      handleSearchChange('urunAdi', formData.urunAdi);
+                    }
+                  }}
+                  className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Ürün adı yazın veya arayın..."
+                />
+              </div>
+              {/* Öneri listesi */}
+              {showSuggestions && activeField === 'urunAdi' && filteredUrunler.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {filteredUrunler.map((u) => (
+                    <button
+                      key={u.id}
+                      type="button"
+                      onClick={() => handleSelectUrun(u)}
+                      className="w-full px-4 py-3 text-left hover:bg-blue-50 flex items-center gap-3 border-b border-slate-100 last:border-b-0"
+                    >
+                      {getUrunResimUrl(u) ? (
+                        <img src={getUrunResimUrl(u)!} alt="" className="w-10 h-10 object-cover rounded" />
+                      ) : (
+                        <div className="w-10 h-10 bg-slate-100 rounded flex items-center justify-center text-slate-400 text-xs">Resim</div>
+                      )}
+                      <div>
+                        <div className="font-medium text-slate-800">{u.urun_adi}</div>
+                        <div className="text-sm text-slate-500">Kod: {u.urun_kodu} • {u.altin_ayari}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div>
+            {/* Ürün Kodu - Arama özellikli */}
+            <div className="relative" ref={activeField === 'urunKodu' ? suggestionsRef : null}>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                Ürün Kodu
+                Ürün Kodu <span className="text-xs text-slate-500 font-normal">(Kayıtlı ürünlerden arayın)</span>
               </label>
-              <input
-                type="text"
-                value={formData.urunKodu}
-                onChange={(e) => handleChange('urunKodu', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Opsiyonel"
-              />
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  value={formData.urunKodu}
+                  onChange={(e) => handleSearchChange('urunKodu', e.target.value)}
+                  onFocus={() => {
+                    if (formData.urunKodu && formData.urunKodu.trim().length > 0) {
+                      handleSearchChange('urunKodu', formData.urunKodu);
+                    }
+                  }}
+                  className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Ürün kodu yazın veya arayın..."
+                />
+              </div>
+              {/* Öneri listesi */}
+              {showSuggestions && activeField === 'urunKodu' && filteredUrunler.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {filteredUrunler.map((u) => (
+                    <button
+                      key={u.id}
+                      type="button"
+                      onClick={() => handleSelectUrun(u)}
+                      className="w-full px-4 py-3 text-left hover:bg-blue-50 flex items-center gap-3 border-b border-slate-100 last:border-b-0"
+                    >
+                      {getUrunResimUrl(u) ? (
+                        <img src={getUrunResimUrl(u)!} alt="" className="w-10 h-10 object-cover rounded" />
+                      ) : (
+                        <div className="w-10 h-10 bg-slate-100 rounded flex items-center justify-center text-slate-400 text-xs">Resim</div>
+                      )}
+                      <div>
+                        <div className="font-medium text-slate-800">{u.urun_kodu}</div>
+                        <div className="text-sm text-slate-500">{u.urun_adi} • {u.altin_ayari}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>
