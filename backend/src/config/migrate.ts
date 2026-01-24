@@ -8,16 +8,27 @@ export async function runMigration() {
         urun_adi VARCHAR(255) NOT NULL,
         urun_kodu VARCHAR(100),
         altin_ayari VARCHAR(50) NOT NULL,
-        musteri_adi VARCHAR(255) NOT NULL,
-        siparis_tarihi DATE NOT NULL,
-        platform VARCHAR(100) NOT NULL,
-        siparis_no VARCHAR(100) NOT NULL,
+        musteri_adi VARCHAR(255),
+        siparis_tarihi DATE,
+        platform VARCHAR(100),
+        siparis_no VARCHAR(100),
         urun_resmi_url VARCHAR(500),
         urun_resmi_dosya VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // NOT NULL kısıtlamalarını kaldır (mevcut tablolar için)
+    await pool.query(`
+      ALTER TABLE urunler 
+      ALTER COLUMN musteri_adi DROP NOT NULL,
+      ALTER COLUMN siparis_tarihi DROP NOT NULL,
+      ALTER COLUMN platform DROP NOT NULL,
+      ALTER COLUMN siparis_no DROP NOT NULL
+    `).catch(() => {
+      // Zaten nullable ise hata yoksay
+    });
 
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_siparis_no ON urunler(siparis_no);

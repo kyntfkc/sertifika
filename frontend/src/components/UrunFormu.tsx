@@ -14,10 +14,6 @@ function UrunFormu({ urun, onSave, onCancel }: UrunFormuProps) {
     urun_adi: '',
     urun_kodu: '',
     altin_ayari: '14 Ayar Altın',
-    musteri_adi: '',
-    siparis_tarihi: new Date().toISOString().split('T')[0],
-    platform: 'Trendyol',
-    siparis_no: '',
     urun_resmi_url: '',
     urun_resmi_file: null,
   });
@@ -28,16 +24,10 @@ function UrunFormu({ urun, onSave, onCancel }: UrunFormuProps) {
 
   useEffect(() => {
     if (urun) {
-      // Tarih formatını YYYY-MM-DD'ye çevir
-      const tarih = urun.siparis_tarihi ? new Date(urun.siparis_tarihi).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
       setFormData({
         urun_adi: urun.urun_adi,
         urun_kodu: urun.urun_kodu || '',
         altin_ayari: urun.altin_ayari,
-        musteri_adi: urun.musteri_adi,
-        siparis_tarihi: tarih,
-        platform: urun.platform,
-        siparis_no: urun.siparis_no,
         urun_resmi_url: urun.urun_resmi_url || '',
         urun_resmi_file: null,
       });
@@ -45,10 +35,6 @@ function UrunFormu({ urun, onSave, onCancel }: UrunFormuProps) {
       if (resimUrl) {
         setPreviewUrl(resimUrl);
       }
-    } else {
-      // Yeni ürün için bugünün tarihini YYYY-MM-DD formatında ayarla
-      const bugun = new Date().toISOString().split('T')[0];
-      setFormData((prev) => ({ ...prev, siparis_tarihi: bugun }));
     }
   }, [urun]);
 
@@ -97,10 +83,6 @@ function UrunFormu({ urun, onSave, onCancel }: UrunFormuProps) {
         urun_adi: formData.urun_adi,
         urun_kodu: formData.urun_kodu || undefined,
         altin_ayari: formData.altin_ayari,
-        musteri_adi: formData.musteri_adi,
-        siparis_tarihi: formData.siparis_tarihi,
-        platform: formData.platform,
-        siparis_no: formData.siparis_no,
         urun_resmi_url: formData.urun_resmi_url || undefined,
       };
 
@@ -139,159 +121,92 @@ function UrunFormu({ urun, onSave, onCancel }: UrunFormuProps) {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Sol Kolon */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-800 mb-4">Ürün Bilgileri</h3>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Ürün Adı *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.urun_adi}
-                onChange={(e) => handleChange('urun_adi', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Örn: Küpe, Yüzük"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Ürün Kodu
-              </label>
-              <input
-                type="text"
-                value={formData.urun_kodu}
-                onChange={(e) => handleChange('urun_kodu', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Opsiyonel"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Altın Ayarı *
-              </label>
-              <select
-                required
-                value={formData.altin_ayari}
-                onChange={(e) => handleChange('altin_ayari', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="14 Ayar Altın">14 Ayar Altın</option>
-                <option value="18 Ayar Altın">18 Ayar Altın</option>
-                <option value="22 Ayar Altın">22 Ayar Altın</option>
-              </select>
-            </div>
-
-            {/* Görsel Yükleme */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Ürün Fotoğrafı
-              </label>
-              <div className="space-y-3">
-                {/* URL Input */}
-                <div>
-                  <input
-                    type="url"
-                    value={formData.urun_resmi_url}
-                    onChange={(e) => handleUrlChange(e.target.value)}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Veya URL girin: https://..."
-                  />
-                </div>
-                {/* Dosya Yükleme */}
-                <div>
-                  <label className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
-                    <Upload className="w-4 h-4 text-slate-600" />
-                    <span className="text-sm text-slate-700">
-                      {formData.urun_resmi_file ? formData.urun_resmi_file.name : 'Dosya Seç'}
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/jpg,image/png,image/webp"
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-                {/* Önizleme */}
-                {previewUrl && (
-                  <div className="mt-2">
-                    <img
-                      src={previewUrl}
-                      alt="Önizleme"
-                      className="w-full h-48 object-contain rounded-lg bg-slate-50 border border-slate-200"
-                      onError={() => setPreviewUrl(null)}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Ürün Adı *
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.urun_adi}
+              onChange={(e) => handleChange('urun_adi', e.target.value)}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Örn: Küpe, Yüzük"
+            />
           </div>
 
-          {/* Sağ Kolon */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-800 mb-4">Müşteri Bilgileri</h3>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Ürün Kodu
+            </label>
+            <input
+              type="text"
+              value={formData.urun_kodu}
+              onChange={(e) => handleChange('urun_kodu', e.target.value)}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Opsiyonel"
+            />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Müşteri Adı *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.musteri_adi}
-                onChange={(e) => handleChange('musteri_adi', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Müşteri adı soyadı"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Altın Ayarı *
+            </label>
+            <select
+              required
+              value={formData.altin_ayari}
+              onChange={(e) => handleChange('altin_ayari', e.target.value)}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="14 Ayar Altın">14 Ayar Altın</option>
+              <option value="18 Ayar Altın">18 Ayar Altın</option>
+              <option value="22 Ayar Altın">22 Ayar Altın</option>
+            </select>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Sipariş Tarihi *
-              </label>
-              <input
-                type="date"
-                required
-                value={formData.siparis_tarihi}
-                onChange={(e) => handleChange('siparis_tarihi', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Platform *
-              </label>
-              <select
-                required
-                value={formData.platform}
-                onChange={(e) => handleChange('platform', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="Trendyol">Trendyol</option>
-                <option value="indigotaki.com">indigotaki.com</option>
-                <option value="Diğer">Diğer</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Sipariş No *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.siparis_no}
-                onChange={(e) => handleChange('siparis_no', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Sipariş numarası"
-              />
+          {/* Görsel Yükleme */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Ürün Fotoğrafı
+            </label>
+            <div className="space-y-3">
+              {/* URL Input */}
+              <div>
+                <input
+                  type="url"
+                  value={formData.urun_resmi_url}
+                  onChange={(e) => handleUrlChange(e.target.value)}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Veya URL girin: https://..."
+                />
+              </div>
+              {/* Dosya Yükleme */}
+              <div>
+                <label className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+                  <Upload className="w-4 h-4 text-slate-600" />
+                  <span className="text-sm text-slate-700">
+                    {formData.urun_resmi_file ? formData.urun_resmi_file.name : 'Dosya Seç'}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+              {/* Önizleme */}
+              {previewUrl && (
+                <div className="mt-2">
+                  <img
+                    src={previewUrl}
+                    alt="Önizleme"
+                    className="w-full h-48 object-contain rounded-lg bg-slate-50 border border-slate-200"
+                    onError={() => setPreviewUrl(null)}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

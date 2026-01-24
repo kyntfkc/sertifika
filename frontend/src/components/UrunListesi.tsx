@@ -27,9 +27,8 @@ function UrunListesi({ onEdit, onAdd }: UrunListesiProps) {
       const filtered = urunler.filter(
         (urun) =>
           urun.urun_adi.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          urun.musteri_adi.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          urun.siparis_no.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          urun.platform.toLowerCase().includes(searchTerm.toLowerCase())
+          (urun.urun_kodu && urun.urun_kodu.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          urun.altin_ayari.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredUrunler(filtered);
     }
@@ -69,10 +68,10 @@ function UrunListesi({ onEdit, onAdd }: UrunListesiProps) {
       urunAdi: urun.urun_adi,
       urunKodu: urun.urun_kodu,
       altinAyari: urun.altin_ayari,
-      musteriAdi: urun.musteri_adi,
-      siparisTarihi: urun.siparis_tarihi,
-      platform: urun.platform,
-      siparisNo: urun.siparis_no,
+      musteriAdi: urun.musteri_adi || '',
+      siparisTarihi: urun.siparis_tarihi || '',
+      platform: urun.platform || '',
+      siparisNo: urun.siparis_no || '',
       urunResmi: getUrunResimUrl(urun) || undefined,
     };
     yazdirSertifika(sertifikaData);
@@ -123,7 +122,7 @@ function UrunListesi({ onEdit, onAdd }: UrunListesiProps) {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
           <input
             type="text"
-            placeholder="Ürün adı, müşteri, sipariş no veya platform ile ara..."
+            placeholder="Ürün adı, kodu veya altın ayarı ile ara..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -161,12 +160,8 @@ function UrunListesi({ onEdit, onAdd }: UrunListesiProps) {
                   )}
                 </div>
                 <h3 className="font-semibold text-slate-800 mb-1 truncate">{urun.urun_adi}</h3>
-                <p className="text-sm text-slate-600 mb-2">{urun.musteri_adi}</p>
-                <div className="text-xs text-slate-500 space-y-1 mb-3">
-                  <p>Sipariş No: {urun.siparis_no}</p>
-                  <p>Platform: {urun.platform}</p>
-                  <p>Tarih: {new Date(urun.siparis_tarihi).toLocaleDateString('tr-TR')}</p>
-                </div>
+                {urun.urun_kodu && <p className="text-sm text-slate-600 mb-1">Kod: {urun.urun_kodu}</p>}
+                <p className="text-sm text-slate-500 mb-3">{urun.altin_ayari}</p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handlePrint(urun)}

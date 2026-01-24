@@ -5,10 +5,10 @@ export interface Urun {
   urun_adi: string;
   urun_kodu?: string;
   altin_ayari: string;
-  musteri_adi: string;
-  siparis_tarihi: string;
-  platform: string;
-  siparis_no: string;
+  musteri_adi?: string;
+  siparis_tarihi?: string;
+  platform?: string;
+  siparis_no?: string;
   urun_resmi_url?: string;
   urun_resmi_dosya?: string;
   created_at: string;
@@ -19,10 +19,10 @@ export interface UrunCreate {
   urun_adi: string;
   urun_kodu?: string;
   altin_ayari: string;
-  musteri_adi: string;
-  siparis_tarihi: string;
-  platform: string;
-  siparis_no: string;
+  musteri_adi?: string;
+  siparis_tarihi?: string;
+  platform?: string;
+  siparis_no?: string;
   urun_resmi_url?: string;
   urun_resmi_dosya?: string;
 }
@@ -47,10 +47,10 @@ export class UrunModel {
         data.urun_adi,
         data.urun_kodu || null,
         data.altin_ayari,
-        data.musteri_adi,
-        data.siparis_tarihi,
-        data.platform,
-        data.siparis_no,
+        data.musteri_adi || null,
+        data.siparis_tarihi || null,
+        data.platform || null,
+        data.siparis_no || null,
         data.urun_resmi_url || null,
         data.urun_resmi_dosya || null,
       ]
