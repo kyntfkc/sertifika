@@ -1,6 +1,6 @@
 export interface SertifikaData {
   urunAdi: string;
-  urunKodu?: string;
+  urunKodu: string;
   altinAyari: string;
   musteriAdi: string;
   siparisTarihi: string;

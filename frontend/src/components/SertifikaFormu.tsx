@@ -150,12 +150,13 @@ function SertifikaFormu() {
             {/* Ürün Kodu - Arama özellikli */}
             <div className="relative" ref={activeField === 'urunKodu' ? suggestionsRef : null}>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                Ürün Kodu <span className="text-xs text-slate-500 font-normal">(Kayıtlı ürünlerden arayın)</span>
+                Ürün Kodu * <span className="text-xs text-slate-500 font-normal">(Kayıtlı ürünlerden arayın)</span>
               </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="text"
+                  required
                   value={formData.urunKodu}
                   onChange={(e) => handleSearchChange('urunKodu', e.target.value)}
                   onFocus={() => {
