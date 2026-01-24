@@ -211,15 +211,47 @@ function SertifikaFormu() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                Ürün Fotoğrafı URL
+                Ürün Fotoğrafı
               </label>
-              <input
-                type="url"
-                value={formData.urunResmi}
-                onChange={(e) => handleChange('urunResmi', e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="https://..."
-              />
+              {formData.urunResmi && formData.urunResmi.startsWith('data:') ? (
+                // Base64 görsel varsa önizleme göster
+                <div className="flex items-center gap-3 p-3 border border-green-300 bg-green-50 rounded-lg">
+                  <img 
+                    src={formData.urunResmi} 
+                    alt="Ürün" 
+                    className="w-16 h-16 object-contain rounded border border-slate-200 bg-white"
+                  />
+                  <div className="flex-1">
+                    <p className="text-sm text-green-700 font-medium">Kayıtlı görsel yüklendi</p>
+                    <button
+                      type="button"
+                      onClick={() => handleChange('urunResmi', '')}
+                      className="text-xs text-red-600 hover:text-red-700"
+                    >
+                      Görseli kaldır
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                // URL girişi
+                <div className="space-y-2">
+                  <input
+                    type="url"
+                    value={formData.urunResmi}
+                    onChange={(e) => handleChange('urunResmi', e.target.value)}
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="https://..."
+                  />
+                  {formData.urunResmi && (
+                    <img 
+                      src={formData.urunResmi} 
+                      alt="Önizleme" 
+                      className="w-16 h-16 object-contain rounded border border-slate-200"
+                      onError={(e) => (e.target as HTMLImageElement).style.display = 'none'}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
