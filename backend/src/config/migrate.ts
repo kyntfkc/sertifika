@@ -6,7 +6,7 @@ export async function runMigration() {
       CREATE TABLE IF NOT EXISTS urunler (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         urun_adi VARCHAR(255) NOT NULL,
-        urun_kodu VARCHAR(100),
+        urun_kodu VARCHAR(100) NOT NULL,
         altin_ayari VARCHAR(50) NOT NULL,
         musteri_adi VARCHAR(255),
         siparis_tarihi DATE,

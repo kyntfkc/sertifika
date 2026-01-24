@@ -138,14 +138,15 @@ function UrunFormu({ urun, onSave, onCancel }: UrunFormuProps) {
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
-              Ürün Kodu
+              Ürün Kodu *
             </label>
             <input
               type="text"
+              required
               value={formData.urun_kodu}
               onChange={(e) => handleChange('urun_kodu', e.target.value)}
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Opsiyonel"
+              placeholder="Ürün kodu girin"
             />
           </div>
 

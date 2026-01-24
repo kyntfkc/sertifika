@@ -12,7 +12,7 @@ export interface SertifikaData {
 export interface Urun {
   id: string;
   urun_adi: string;
-  urun_kodu?: string;
+  urun_kodu: string;
   altin_ayari: string;
   musteri_adi?: string;
   siparis_tarihi?: string;
@@ -26,7 +26,7 @@ export interface Urun {
 
 export interface UrunFormData {
   urun_adi: string;
-  urun_kodu?: string;
+  urun_kodu: string;
   altin_ayari: string;
   urun_resmi_url?: string;
   urun_resmi_file?: File | null;

@@ -160,7 +160,7 @@ function UrunListesi({ onEdit, onAdd }: UrunListesiProps) {
                   )}
                 </div>
                 <h3 className="font-semibold text-slate-800 mb-1 truncate">{urun.urun_adi}</h3>
-                {urun.urun_kodu && <p className="text-sm text-slate-600 mb-1">Kod: {urun.urun_kodu}</p>}
+                <p className="text-sm text-slate-600 mb-1">Kod: {urun.urun_kodu}</p>
                 <p className="text-sm text-slate-500 mb-3">{urun.altin_ayari}</p>
                 <div className="flex gap-2">
                   <button
