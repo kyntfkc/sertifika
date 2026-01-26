@@ -98,6 +98,19 @@ function SertifikaAyarlari() {
           <h3 className="text-base font-semibold mb-3 text-slate-800">Fotoğraf</h3>
           <div className="space-y-2.5">
             <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Konum</label>
+              <select
+                value={ayarlar.fotoğrafKonumu}
+                onChange={(e) => handleAyarlarDegistir('fotoğrafKonumu', e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="sol-ust">Sol Üst</option>
+                <option value="sol-alt">Sol Alt</option>
+                <option value="sag-ust">Sağ Üst</option>
+                <option value="sag-alt">Sağ Alt</option>
+              </select>
+            </div>
+            <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Genişlik (cm)</label>
               <input
                 type="number"
@@ -124,6 +137,28 @@ function SertifikaAyarlari() {
         <div className="bg-white/80 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-slate-200/60">
           <h3 className="text-base font-semibold mb-3 text-slate-800">Sol Bölüm</h3>
           <div className="space-y-2.5">
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Hizalama</label>
+              <select
+                value={ayarlar.solBölümHizalama}
+                onChange={(e) => handleAyarlarDegistir('solBölümHizalama', e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="sol">Sol</option>
+                <option value="orta">Orta</option>
+                <option value="sag">Sağ</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Padding (cm)</label>
+              <input
+                type="number"
+                step="0.1"
+                value={ayarlar.solBölümPadding}
+                onChange={(e) => handleAyarlarDegistir('solBölümPadding', e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Ürün Adı Font (pt)</label>
               <input
@@ -162,6 +197,28 @@ function SertifikaAyarlari() {
           <h3 className="text-base font-semibold mb-3 text-slate-800">Sağ Bölüm</h3>
           <div className="space-y-2.5">
             <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Hizalama</label>
+              <select
+                value={ayarlar.sagBölümHizalama}
+                onChange={(e) => handleAyarlarDegistir('sagBölümHizalama', e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="sol">Sol</option>
+                <option value="orta">Orta</option>
+                <option value="sag">Sağ</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Padding (cm)</label>
+              <input
+                type="number"
+                step="0.1"
+                value={ayarlar.sagBölümPadding}
+                onChange={(e) => handleAyarlarDegistir('sagBölümPadding', e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Müşteri Font (pt)</label>
               <input
                 type="number"
@@ -171,76 +228,136 @@ function SertifikaAyarlari() {
                 className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Satır Aralığı (cm)</label>
+              <input
+                type="number"
+                step="0.1"
+                value={ayarlar.bilgiSatırAraligi}
+                onChange={(e) => handleAyarlarDegistir('bilgiSatırAraligi', e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Pozisyon Ayarları */}
       <div className="mt-6 bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-lg border border-slate-200/60">
-        <h3 className="text-sm font-semibold mb-3 text-slate-800">Pozisyon Ayarları (cm)</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+        <h3 className="text-base font-semibold mb-2 text-slate-800">Pozisyon Ayarları (cm)</h3>
+        <p className="text-xs text-slate-600 mb-4">Her elementin pozisyonunu cm cinsinden ayarlayın. Sol üst köşe (0,0).</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
           {/* Fotoğraf */}
-          <div className="bg-slate-50 p-2 rounded border border-slate-200">
-            <h4 className="text-xs font-semibold text-slate-700 mb-1.5">📷 Fotoğraf</h4>
-            <div className="space-y-1">
-              <input type="number" step="0.1" value={ayarlar.fotoğrafX || ''} onChange={(e) => handleAyarlarDegistir('fotoğrafX', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="X" />
-              <input type="number" step="0.1" value={ayarlar.fotoğrafY || ''} onChange={(e) => handleAyarlarDegistir('fotoğrafY', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="Y" />
+          <div className="bg-slate-50 p-3 rounded border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-700 mb-2">Fotoğraf</h4>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Yatay (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.fotoğrafX || ''} onChange={(e) => handleAyarlarDegistir('fotoğrafX', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Dikey (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.fotoğrafY || ''} onChange={(e) => handleAyarlarDegistir('fotoğrafY', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
             </div>
           </div>
           {/* Ürün Adı */}
-          <div className="bg-slate-50 p-2 rounded border border-slate-200">
-            <h4 className="text-xs font-semibold text-slate-700 mb-1.5">🏷️ Ürün Adı</h4>
-            <div className="space-y-1">
-              <input type="number" step="0.1" value={ayarlar.ürünAdıX || ''} onChange={(e) => handleAyarlarDegistir('ürünAdıX', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="X" />
-              <input type="number" step="0.1" value={ayarlar.ürünAdıY || ''} onChange={(e) => handleAyarlarDegistir('ürünAdıY', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="Y" />
+          <div className="bg-slate-50 p-3 rounded border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-700 mb-2">Ürün Adı</h4>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Yatay (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.ürünAdıX || ''} onChange={(e) => handleAyarlarDegistir('ürünAdıX', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Dikey (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.ürünAdıY || ''} onChange={(e) => handleAyarlarDegistir('ürünAdıY', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
             </div>
           </div>
-          {/* Ürün Kodu */}
-          <div className="bg-slate-50 p-2 rounded border border-slate-200">
-            <h4 className="text-xs font-semibold text-slate-700 mb-1.5">🔢 Model</h4>
-            <div className="space-y-1">
-              <input type="number" step="0.1" value={ayarlar.ürünKoduX || ''} onChange={(e) => handleAyarlarDegistir('ürünKoduX', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="X" />
-              <input type="number" step="0.1" value={ayarlar.ürünKoduY || ''} onChange={(e) => handleAyarlarDegistir('ürünKoduY', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="Y" />
+          {/* Model Kodu */}
+          <div className="bg-slate-50 p-3 rounded border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-700 mb-2">Model Kodu</h4>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Yatay (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.ürünKoduX || ''} onChange={(e) => handleAyarlarDegistir('ürünKoduX', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Dikey (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.ürünKoduY || ''} onChange={(e) => handleAyarlarDegistir('ürünKoduY', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
             </div>
           </div>
           {/* Altın */}
-          <div className="bg-slate-50 p-2 rounded border border-slate-200">
-            <h4 className="text-xs font-semibold text-slate-700 mb-1.5">✨ Altın</h4>
-            <div className="space-y-1">
-              <input type="number" step="0.1" value={ayarlar.altınAyarıX || ''} onChange={(e) => handleAyarlarDegistir('altınAyarıX', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="X" />
-              <input type="number" step="0.1" value={ayarlar.altınAyarıY || ''} onChange={(e) => handleAyarlarDegistir('altınAyarıY', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="Y" />
+          <div className="bg-slate-50 p-3 rounded border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-700 mb-2">Altın</h4>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Yatay (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.altınAyarıX || ''} onChange={(e) => handleAyarlarDegistir('altınAyarıX', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Dikey (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.altınAyarıY || ''} onChange={(e) => handleAyarlarDegistir('altınAyarıY', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
             </div>
           </div>
-          {/* Müşteri */}
-          <div className="bg-slate-50 p-2 rounded border border-slate-200">
-            <h4 className="text-xs font-semibold text-slate-700 mb-1.5">👤 Alıcı</h4>
-            <div className="space-y-1">
-              <input type="number" step="0.1" value={ayarlar.müşteriAdıX || ''} onChange={(e) => handleAyarlarDegistir('müşteriAdıX', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="X" />
-              <input type="number" step="0.1" value={ayarlar.müşteriAdıY || ''} onChange={(e) => handleAyarlarDegistir('müşteriAdıY', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="Y" />
+          {/* Alıcı */}
+          <div className="bg-slate-50 p-3 rounded border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-700 mb-2">Alıcı</h4>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Yatay (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.müşteriAdıX || ''} onChange={(e) => handleAyarlarDegistir('müşteriAdıX', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Dikey (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.müşteriAdıY || ''} onChange={(e) => handleAyarlarDegistir('müşteriAdıY', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
             </div>
           </div>
           {/* Tarih */}
-          <div className="bg-slate-50 p-2 rounded border border-slate-200">
-            <h4 className="text-xs font-semibold text-slate-700 mb-1.5">📅 Tarih</h4>
-            <div className="space-y-1">
-              <input type="number" step="0.1" value={ayarlar.siparişTarihiX || ''} onChange={(e) => handleAyarlarDegistir('siparişTarihiX', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="X" />
-              <input type="number" step="0.1" value={ayarlar.siparişTarihiY || ''} onChange={(e) => handleAyarlarDegistir('siparişTarihiY', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="Y" />
+          <div className="bg-slate-50 p-3 rounded border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-700 mb-2">Tarih</h4>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Yatay (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.siparişTarihiX || ''} onChange={(e) => handleAyarlarDegistir('siparişTarihiX', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Dikey (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.siparişTarihiY || ''} onChange={(e) => handleAyarlarDegistir('siparişTarihiY', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
             </div>
           </div>
-          {/* Platform & Sipariş No */}
-          <div className="bg-slate-50 p-2 rounded border border-slate-200">
-            <h4 className="text-xs font-semibold text-slate-700 mb-1.5">🛒 Platform</h4>
-            <div className="space-y-1">
-              <input type="number" step="0.1" value={ayarlar.platformX || ''} onChange={(e) => handleAyarlarDegistir('platformX', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="X" />
-              <input type="number" step="0.1" value={ayarlar.platformY || ''} onChange={(e) => handleAyarlarDegistir('platformY', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="Y" />
+          {/* Platform */}
+          <div className="bg-slate-50 p-3 rounded border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-700 mb-2">Platform</h4>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Yatay (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.platformX || ''} onChange={(e) => handleAyarlarDegistir('platformX', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Dikey (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.platformY || ''} onChange={(e) => handleAyarlarDegistir('platformY', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mt-3 bg-slate-50 p-2 rounded border border-slate-200">
-          <h4 className="text-xs font-semibold text-slate-700 mb-1.5">🔢 Sipariş No</h4>
-          <div className="space-y-1">
-            <input type="number" step="0.1" value={ayarlar.siparişNoX || ''} onChange={(e) => handleAyarlarDegistir('siparişNoX', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="X" />
-            <input type="number" step="0.1" value={ayarlar.siparişNoY || ''} onChange={(e) => handleAyarlarDegistir('siparişNoY', e.target.value)} className="w-full px-1.5 py-1 text-xs border border-slate-300 rounded" placeholder="Y" />
+          {/* Sipariş No */}
+          <div className="bg-slate-50 p-3 rounded border border-slate-200">
+            <h4 className="text-xs font-semibold text-slate-700 mb-2">Sipariş No</h4>
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Yatay (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.siparişNoX || ''} onChange={(e) => handleAyarlarDegistir('siparişNoX', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Dikey (cm)</label>
+                <input type="number" step="0.1" value={ayarlar.siparişNoY || ''} onChange={(e) => handleAyarlarDegistir('siparişNoY', e.target.value)} className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
