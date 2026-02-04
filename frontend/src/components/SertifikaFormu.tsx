@@ -206,6 +206,7 @@ function SertifikaFormu() {
                 <option value="14 Ayar Altın">14 Ayar Altın</option>
                 <option value="18 Ayar Altın">18 Ayar Altın</option>
                 <option value="22 Ayar Altın">22 Ayar Altın</option>
+                <option value="925 Ayar Gümüş">925 Ayar Gümüş</option>
               </select>
             </div>
 
